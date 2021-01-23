@@ -73,14 +73,14 @@
             <tr bgcolor="#8cff3b">
                 <th>#</th>
                 <!--                сортировка asc   dsc  по заголовку-->
-                <th><a th:href="@{'/user/page/' + ${currentPage} + '?sortField=username&sortDir=' + ${reverseSortDir}}">username</a>
+                <th><a th:href="@{'/user/page/' + ${currentPage} +'?pageSize=' + ${pageSize} + '&sortField=username&sortDir=' + ${reverseSortDir}}">username</a>
                 </th>
                 <th>Created_At</th>
                 <th>Updated_At_At</th>
                 <th>FirstName</th>
                 <th>LastName</th>
                 <th>Status</th>
-                <th><a th:href="@{'/user/page/' + ${currentPage} + '?sortField=roles&sortDir=' + ${reverseSortDir}}">Role</a>
+                <th><a th:href="@{'/user/page/' + ${currentPage} +'?pageSize=' + ${pageSize} + '&sortField=roles&sortDir=' + ${reverseSortDir}}">Role</a>
                 </th>
                 <th>Action</th>
 
@@ -89,6 +89,7 @@
             </thead>
             <tbody>
             <tr th:each="user, iterStar : ${users}">
+<!--               <p th:each="userForCount, iter : ${usersForCount}"></p>-->
                 <td th:text="${iterStar.index+1}" bgcolor="#8cff3b"></td>
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.createdAt}"></td>
@@ -96,6 +97,7 @@
                 <td th:text="${user.firstName}"></td>
                 <td th:text="${user.lastName}"></td>
                 <td th:text="${user.status}"></td>
+
 
                 <td>
                     <div th:each="role :${user.roles}" th:text="${role.getName()}"></div>
@@ -179,36 +181,35 @@ Total Pages: [[${totalPages}]]<br>
 
 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
 						<a th:if="${currentPage != i}"
-                           th:href="@{'/user/page/' + ${i}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
+                           th:href="@{'/user/page/' + ${i}+ '?pageSize=' + ${pageSize} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
 						<span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
 					</span>
 
 <a th:if="${currentPage < totalPages}"
-   th:href="@{'/user/page/' + ${currentPage + 1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next |</a>
+   th:href="@{'/user/page/' + ${currentPage + 1}+'?pageSize=' + ${pageSize} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next |</a>
 <span th:unless="${currentPage < totalPages}">Next</span>
 
 
 <a th:if="${currentPage < totalPages}"
-   th:href="@{'/user/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"> Last</a>
+   th:href="@{'/user/page/' + ${totalPages}+ '?pageSize=' + ${pageSize} +'&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}"> Last</a>
 <span th:unless="${currentPage < totalPages}">Last</span>
 
 <br><br/>
 
-<form name="myform" th:method="GET" th:action="@{/user/page/1}" th:object="${user}">
+<form th:name="myform1" th:method="GET" th:action="@{/user/page/1}" th:object="${user}">
 <label for="pageSizeNew">Select page size: </label>
-    <select type="number" th:name="pageSize" id="pageSizeNew" >
-        <option th:value=3> 1</option>
-        <option th:value=3> 2</option>
-        <option th:value=3> 3</option>
-        <option th:value=3> 4</option>
-        <option th:value=3> 5</option>
-        <option th:value=5> 6</option>
-        <option th:value=10> 7</option>
-        <option th:value=10> 8</option>
-        <option th:value=10> 9</option>
-        <option th:value=10> 10</option>
+    <select type="number" th:name="pageSize" th:value="${pageNo}" id="pageSizeNew" >
+        <option value=1> 1</option>
+        <option value=2> 2</option>
+        <option value=3> 3</option>
+        <option value=4> 4</option>
+        <option value=5> 5</option>
+        <option value=6> 6</option>
+        <option value=7> 7</option>
+        <option value=8> 8</option>
+        <option value=9> 9</option>
+        <option value=10> 10</option>
     </select>
-
 
     <input hidden="hidden" name="sortDir" th:value="${sortDir}"/>
     <input hidden="hidden" name="sortField" th:value="${sortField}"/>
@@ -217,7 +218,7 @@ Total Pages: [[${totalPages}]]<br>
     <input type="submit" value="Submit"/>
 
 <!--    <script type="text/javascript">-->
-<!--        document.myform.submit();-->
+<!--        document.myform1.submit();-->
 <!--    </script>-->
 
 </form>

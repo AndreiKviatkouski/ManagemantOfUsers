@@ -2,6 +2,7 @@ package by.AndreiKviatkouski.controllers;
 
 import by.AndreiKviatkouski.dto.UserDto;
 import by.AndreiKviatkouski.models.User;
+import by.AndreiKviatkouski.repositories.UserRepository;
 import by.AndreiKviatkouski.service.RoleService;
 import by.AndreiKviatkouski.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +23,13 @@ public class UserController {
     private RoleService roleService;
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
+        this.userRepository = userRepository;
     }
+
 
     @GetMapping()
     public String viewHomePage(Model model) {
@@ -43,6 +47,9 @@ public class UserController {
 
         Page<User> page = userService.findPaginated(pageNo, pageSizeNew, sortField, sortDir);
         List<User> listUsers = page.getContent();
+        List<User> listUsersForCount = userRepository.findAll();
+
+        model.addAttribute("pageSize", pageSize);
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
@@ -51,6 +58,7 @@ public class UserController {
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         model.addAttribute("users", listUsers);
+        model.addAttribute("usersForCount", listUsersForCount);
         return "users/user";
     }
 
